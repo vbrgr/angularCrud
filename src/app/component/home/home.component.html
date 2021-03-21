@@ -1,0 +1,95 @@
+<!-- main app container -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            
+            <div *ngIf ="action['params'] == 'add-user' || action['params'] == 'edit-user' ">
+                    <a href="javascript:;" (click)="this.menuClickHandler('home');" data-toggle="tooltip" title="Manage User" class="btn btn-info btn-fill pull-right">Manage User</a>
+                <div class="card-header">
+                    <h4 class="card-title">{{ action['params'] | uppercase }}</h4>
+                </div>
+                <div class="card-body">
+             
+                <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                    <div class="alert alert-danger alert-dismissible" *ngIf="invalidLogin">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{errorMsg}}</div>
+                    <div class="alert alert-success alert-dismissible" *ngIf="successMsg">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{successMsg}}</div>
+                        <div class="form-group">
+                            <label>Id</label>
+                            <input type="text" formControlName="id" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" [(ngModel)]="editData.id"  />
+                            
+                        </div>
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" formControlName="firstname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" [(ngModel)]="editData.firstname"  />
+                        <div *ngIf="submitted && f['firstname']['errors']" class="invalid-feedback">
+                            <div *ngIf="f['firstname']['errors']['required']">firstname is required</div>
+                            <div *ngIf="f['firstname']['errors']['minlength']">firstname must be at least 3 characters</div>
+                            <div *ngIf="f['firstname']['errors']['pattern']">Enter valid firstname</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" formControlName="lastname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }" [(ngModel)]="editData.lastname"  />
+                        <div *ngIf="submitted && f['lastname']['errors']" class="invalid-feedback">
+                            <div *ngIf="f['lastname']['errors']['required']">lastname is required</div>
+                            <div *ngIf="f['lastname']['errors']['minlength']">lastname must be at least 3 characters</div>
+                            <div *ngIf="f['lastname']['errors']['pattern']">Enter valid lastname</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button *ngIf="action['params'] == 'edit-user'"  [disabled]="loading"  class="btn btn-success">Update</button>
+                        <button *ngIf="action['params'] == 'add-user' " [disabled]="loading"  class="btn btn-success">Register</button>
+
+                        <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                    </div>
+                </form>
+              </div>
+            </div>
+
+              <div *ngIf="!action['params']">
+                    <a href="javascript:;" (click)="this.menuClickHandler('home/add-user');" data-toggle="tooltip" title="Add User" class="btn btn-info btn-fill pull-right">Add User</a>
+                    <div class="card-header">
+                        <h4 class="card-title">Manage Users</h4>
+                    </div>
+                    <div class="card-body">
+                            <div class="alert alert-danger alert-dismissible" *ngIf="invalidLogin">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{errorMsg}}</div>
+                            <div class="alert alert-success alert-dismissible" *ngIf="successMsg">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{successMsg}}</div>
+                    <table id="dynamic-table" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody *ngIf="users && users.length != 0">
+                        <tr *ngFor="let user of users" >
+                            <td>{{user.id}}</td>
+                            <td>{{user.firstname}}</td>
+                            <td>{{user.lastname}}</td>
+                            <td>
+                                <a href="javascript:;" (click) ="this.menuClickHandler('home/edit-user/'+ user.id)" class="btn btn-warning  btn-fill">Edit</a> &nbsp;<a href="javascript:;" class="btn btn-danger btn-fill" (click) ="deleteUser(user.id)" >Delete</a>
+                            </td>
+                          </tr>
+                      </tbody>
+                      <tbody *ngIf="users && users.length == 0">
+                            <tr>
+                              <td colspan="3" class="no-data-available">No data!</td>
+                            </tr>
+                          <tbody>
+                    </table>
+                    </div>
+                    </div>
+
+        </div>
+    </div>
+  </div>
